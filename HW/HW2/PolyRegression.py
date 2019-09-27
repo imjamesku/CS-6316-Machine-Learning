@@ -14,6 +14,14 @@ def load_data_set(filename):
     plt.show()
     return x, y
 
+# Find theta using the normal equation
+
+
+def normal_equation(x, y):
+    x_t = np.transpose(x)
+    theta = np.dot(np.dot(np.linalg.inv(np.dot(x_t, x)), x_t), y)
+    return theta, []
+
 # Step 2:
 # Given a n by 1 dimensional array return an n by num_dimension array
 # consisting of [1, x, x^2, ...] in each row
@@ -26,7 +34,7 @@ def increase_poly_order(x, degree):
     result = np.array([list(np.power(x.flatten(), i))
                        for i in range(degree+1)]).T
     # normalize
-    result = result / result.max(axis=0)
+    # result = result / result.max(axis=0)
     return result
 
 # split the data into train and test examples by the train_proportion
@@ -93,11 +101,12 @@ def plot_epoch_losses(x_train, x_test, y_train, y_test, best_thetas, title):
         losses.append(get_loss(y_train, predict(x_train, theta)))
         epochs.append(epoch_num)
         epoch_num += 1
-    plt.scatter(epochs, losses)
+    fig, ax = plt.subplots()
+    ax.scatter(epochs, losses, label="training")
     plt.xlabel("epoch")
     plt.ylabel("loss")
-    plt.title(title + "on training data")
-    plt.show()
+    plt.title(title)
+    # plt.show()
 
     epochs = []
     losses = []
@@ -106,10 +115,11 @@ def plot_epoch_losses(x_train, x_test, y_train, y_test, best_thetas, title):
         losses.append(get_loss(y_test, predict(x_test, theta)))
         epochs.append(epoch_num)
         epoch_num += 1
-    plt.scatter(epochs, losses)
-    plt.xlabel("epoch")
-    plt.ylabel("loss")
-    plt.title(title + "on testing data")
+    ax.scatter(epochs, losses, label="testing")
+    ax.legend()
+    # plt.xlabel("epoch")
+    # plt.ylabel("loss")
+    # plt.title(title + "on testing data")
     plt.show()
 
 
@@ -135,7 +145,7 @@ def get_loss_per_poly_order(x, y, degrees):
             augmented_x, y, 0.6)
         x_validation, x_test, y_validation, y_test = train_test_split(
             x_test, y_test, 0.5)
-        theta, thetas = solve_regression(x_train, y_train)
+        theta, thetas = normal_equation(x_train, y_train)
         training_losses.append(get_loss(y_train, predict(x_train, theta)))
         validation_losses.append(
             get_loss(y_validation, predict(x_validation, theta)))
@@ -175,9 +185,9 @@ def select_hyperparameter(degrees, x_train, x_test, y_train, y_test):
     # Once the best hyperparameter has been chosen
     # Train the model using that hyperparameter with all samples in the training
     # Then use the test data to estimate how well this model generalizes.
-    best_degree = 9  # fill in using best degree from part 2
+    best_degree = 5  # fill in using best degree from part 2
     x_train = increase_poly_order(x_train, best_degree)
-    best_theta, best_thetas = solve_regression(x_train, y_train)
+    best_theta, best_thetas = solve_regression(x_train, y_train, 200, 0.0002)
     best_fit_plot(best_theta, best_degree)
     x_test = increase_poly_order(x_test, best_degree)
     test_loss = get_loss(y_test, predict(x_test, best_theta))
@@ -209,11 +219,9 @@ def get_loss_per_tr_num_examples(x, y, example_num, train_proportion):
     testing_losses = []
     for n in example_num:
         x_available, y_available = x[:n, :], y[:n, 0]
-        print(x_available.shape)
-        print(y_available.shape)
         x_train, x_test, y_train, y_test = train_test_split(
             x_available, y_available[:, np.newaxis], train_proportion)
-        theta, thetas = solve_regression(x_train, y_train)
+        theta, thetas = normal_equation(x_train, y_train)
         training_losses.append(get_loss(y_train, predict(x_train, theta)))
         testing_losses.append(get_loss(y_test, predict(x_test, theta)))
     return training_losses, testing_losses

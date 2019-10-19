@@ -62,7 +62,7 @@ def classify(x_train, y_train, x_test, k):
         sorted_y = [yi for xi, yi in sorted(
             zip(x_train, y_train), key=distanceFrom(xi))]
         k_nearest = sorted_y[:k]
-        print(k_nearest)
+        # print(k_nearest)
         counts = Counter(k_nearest)
         y_predict.append(counts.most_common(1)[0][0])
     return y_predict
@@ -92,6 +92,8 @@ def barplot(klist, accuracy_list):
     print(klist)
     print(accuracy_list)
     plt.bar(klist, accuracy_list)
+    axes = plt.gca()
+    axes.set_ylim([0.6, 0.7])
     plt.show()
     # use matplot lib to generate bar plot with K on x axis and cross validation accuracy on y-axis
     return

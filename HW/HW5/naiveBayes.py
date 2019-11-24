@@ -166,7 +166,7 @@ def naiveBayesBernFeature_test(Xtest, ytest, thetaPosTrue, thetaNegTrue):
                 posP *= thetaPosTrue[j]
                 negP *= thetaNegTrue[j]
             else:
-                posP *= (1-thetaNegTrue[j])
+                posP *= (1-thetaPosTrue[j])
                 negP *= (1-thetaNegTrue[j])
         if posP > negP:
             yPredict.append(1)

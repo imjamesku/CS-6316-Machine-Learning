@@ -1,0 +1,2 @@
+# HW4
+python fashion.py fashion_data2student/fashion_data2student/fashion_train.csv fashion_data2student/fashion_data2student/fashion_test.csv

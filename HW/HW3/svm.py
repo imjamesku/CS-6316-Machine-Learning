@@ -84,19 +84,27 @@ def train_and_select_model(training_csv):
     # hard code hyperparameter configurations, an example:
     param_set = [
         {'kernel': 'rbf', 'C': 1, 'degree': 1},
-        {'kernel': 'rbf', 'C': 1, 'degree': 3},
-        {'kernel': 'rbf', 'C': 1, 'degree': 5},
+        {'kernel': 'rbf', 'C': 10, 'degree': 1},
+        {'kernel': 'rbf', 'C': 100, 'degree': 1},
         {'kernel': 'linear', 'C': 1, 'degree': 1},
-        {'kernel': 'linear', 'C': 1, 'degree': 3},
-        {'kernel': 'linear', 'C': 1, 'degree': 5},
-        {'kernel': 'linear', 'C': 1, 'degree': 7},
-        {'kernel': 'poly', 'C': 1, 'degree': 1},
-        {'kernel': 'poly', 'C': 1, 'degree': 3},
-        {'kernel': 'poly', 'C': 1, 'degree': 5},
+        {'kernel': 'linear', 'C': 10, 'degree': 1},
+        {'kernel': 'linear', 'C': 50, 'degree': 1},
+        {'kernel': 'linear', 'C': 100, 'degree': 1},
         {'kernel': 'poly', 'C': 1, 'degree': 7},
-        {'kernel': 'sigmoid', 'C': 1, 'degree': 3},
-        {'kernel': 'sigmoid', 'C': 1, 'degree': 5},
-        {'kernel': 'sigmoid', 'C': 1, 'degree': 7},
+        {'kernel': 'poly', 'C': 1, 'degree': 9},
+        {'kernel': 'poly', 'C': 1, 'degree': 11},
+        {'kernel': 'poly', 'C': 1, 'degree': 13},
+        {'kernel': 'poly', 'C': 10, 'degree': 7},
+        {'kernel': 'poly', 'C': 10, 'degree': 9},
+        {'kernel': 'poly', 'C': 10, 'degree': 11},
+        {'kernel': 'poly', 'C': 10, 'degree': 13},
+        {'kernel': 'poly', 'C': 100, 'degree': 7},
+        {'kernel': 'poly', 'C': 100, 'degree': 9},
+        {'kernel': 'poly', 'C': 100, 'degree': 11},
+        {'kernel': 'poly', 'C': 100, 'degree': 13},
+        {'kernel': 'sigmoid', 'C': 1, 'degree': 1},
+        {'kernel': 'sigmoid', 'C': 10, 'degree': 1},
+        {'kernel': 'sigmoid', 'C': 100, 'degree': 1},
     ]
     # your code here
     scores = []
@@ -110,8 +118,10 @@ def train_and_select_model(training_csv):
         cv_train_scores, cv_test_scores = cross_val_score(
             clf, x_train, y_train, cv=3)
         print(params)
-        print('cv_train_scores: {}'.format(cv_train_scores))
-        print('cv_test_scores: {}'.format(cv_test_scores))
+        print('cv_train_scores: {}, mean: {}'.format(
+            cv_train_scores, np.mean(cv_train_scores)))
+        print('cv_test_scores: {}, mean: {}'.format(
+            cv_test_scores, np.mean(cv_test_scores)))
         mean_score = np.mean(cv_test_scores)
         if mean_score > best_score:
             best_params = params
